@@ -1,96 +1,134 @@
+
 <!DOCTYPE html>
-<html lang="en-us">
-  <head>
-    <meta charset="UTF-8">
-    <title>Screencalc by nevedwards101</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen"><link rel="stylesheet" href="nevadcalc.css">
-  <script src="jquery.min.js"></script>
-    
-    <script>
-    function decimalPlaces(num) {
-      var match = (''+num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
-      if (!match) { return 0; }
-      return Math.max(
-           0,
-           // Number of digits right of decimal point.
-           (match[1] ? match[1].length : 0)
-           // Adjust for scientific notation.
-           - (match[2] ? +match[2] : 0));
-    }
-    function reload () {
-      var base = $(this).val() / $(this).attr('data-ref');
-      var actual = $(this).attr('id');
-      $('input').each(function(){
-        if($(this).attr('id')!=actual) {
-          var valor = base * $(this).attr('data-ref');
-          if(decimalPlaces(valor)>0) {valor = valor.toFixed(2)}
-          $(this).val(valor);
-        }
-      })
-    }
-    $(document).ready(function(){
-      $('input').on('change', reload);
-      $('input').on('keyup', reload);
-    });
-  </script>
-    
-    
-  </head>
-  <body>
-    <section class="page-header">
-      <h1 class="project-name">Publisher Screen Calculator</h1>
-      <h2 class="project-tagline"></h2>
-      
-    </section>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title></title>
 
-    <section class="main-content">
-      <p>
-</p>
-  
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+</head>
 
+<style>
+
+body {
+
+	background-image: url('grunge_patterns.jpg');
+	background-attachment: fixed;
+	color: #333;
+}
+
+.box {
+	border-radius: 3px;
+	background: rgba(101, 101, 101, 0.7); margin: auto; padding: 12px;
+}
+
+.lightbox {
+	zoom: 1.5;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(10, 10, 10, 0.8);
+	text-align: center;
+	margin: auto;
+
+}
+
+div.horizontal {
+	display: flex;
+	justify-content: center;
+	height: 100%;
+}
+
+div.vertical {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	width: 100%;
+}
+
+::-webkit-input-placeholder {
+   color: #955;
+   text-align: center;
+}
+
+::-moz-placeholder {
+   color: #955;
+   text-align: center;
+}
+
+:-ms-input-placeholder {
+   color: #955;
+   text-align: center;
+}
+
+</style>
 
 <body>
 
-<table cellpadding="0" cellspacing="0">
-<caption class="caption">Enter a value</caption>
-  <thead>
-    <tr>
-      <th>MDPI - Publisher Settings (1&times;)</th>
-      <th>HDPI  - Samsung 2.3 (1.5&times;)</th>
-      <th>HDPI  - M3 (1.5&times;)</th>
-      <th>XHDPI - iPod 4/5/6 (2&times;)</th>
-      <th>XXHDPI - Nexus 6 (3&times;)</th>
-      <th>nev (4&times;)</th>
-      
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><input type="number" id="mdpi" data-ref="1" maxlength="5" value="320"></td>
-      <td><input type="number" id="hdpi" data-ref="1.5" maxlength="5" value="480"></td>
-       <td><input type="number" id="hdpi" data-ref="1.5" maxlength="5" value="480"></td>
-      <td><input type="number" id="xhdpi" data-ref="2" maxlength="5" value="640"></td>
-      <td><input type="number" id="xxhdpi" data-ref="3" maxlength="5" value="960"></td>
-      <td><input type="number" id="nev" data-ref="4" maxlength="5" value="1280"></td>
-    </tr>
-  </tbody>
-</table>
+	<div id="loginbox" class="lightbox" >
+		<div class="horizontal">
+			<div class="vertical">
+				<div class="box">
+					<input style="margin: 16px; text-align: center;" id="password" type="password" placeholder="password" /> <br />
+					<button id="loginbutton" type="button">Enter</button>
+					<p id="wrongPassword" style="display: none">wrong password</p>
+				</div>
+			</div>
+		</div>
+	</div>
 
 
 
+	<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
 
-<p>
-  <ul class="points">
-    <li>Change the number on any of the input fields to get the correct values.</li>
-    <li>Alwyas better to round up numbers than have a half pixel</li>
-    <li><a href="mailto:nedwards@antennainternational.com">email Nev</a>
-    
-  </ul>
+
+	 <script type="text/javascript" src="https://cdn.rawgit.com/chrisveness/crypto/master/sha1.js"></script>
+
+	<script type="text/javascript">
+	"use strict";
+
+
+	function loadPage(pwd) {
+
+		var hash= pwd;
+		hash= Sha1.hash(pwd);
+		var url= hash + "/index.html";
+
+		$.ajax({
+			url : url,
+			dataType : "html",
+			success : function(data) {
+
+				window.location= url;
+
+			},
+			error : function(xhr, ajaxOptions, thrownError) {
+
+
+				parent.location.hash= hash;
+
+				//$("#wrongPassword").show();
+				$("#password").attr("placeholder","wrong password");
+				$("#password").val("");
+			}
+		});
+	}
+
+
+	$("#loginbutton").on("click", function() {
+		loadPage($("#password").val());
+	});
+	$("#password").keypress(function(e) {
+		if (e.which == 13) {
+
+			loadPage($("#password").val());
+		}
+	});
+	$("#password").focus();
+
+	</script>
 
 </body>
 </html>
